@@ -8,7 +8,7 @@ https://hwan-shell.tistory.com/324
 ex) mkdir "abc"
 mkdir 프로세스를 fork. 해당 프로세스의 stdin으로 "abc"들어옴. 명령어 실행
 
-PIPE사용시
+## PIPE사용시
 ls | sort | less
 
 ![image](https://user-images.githubusercontent.com/71350045/224916601-b09fe456-948d-42bb-8de6-52f4540083fd.png)
@@ -23,3 +23,21 @@ grep을 예로 들어 설명하자면, 원래 grep은 입력으로 전달된 파
 ls -a | grep hi 를 하게 되면 stdin으로 ls -a결과를 받아 이 내용에서 특정 문자열을 찾게 된다.
 그러나 echo file_name.txt | xargs grep hello를 하게 되면 echo file_name.txt의 결과를 표준입력으로 읽어 명령어를 만든다. 예를들어 file_name.txt 내용이 f1.txt f2.txt였다면
 grep hello f1.txt f2.txt 다음과 같은 명령어를 만들어 실행하게 되는 것이다.
+
+
+## Redirection
+키보드로 stdin을 받거나 터미널로 stdout을 하는 것이 아닌, file로 stdin을 받고 file로 stdout을 할 수 있는 기능.
+- [command] < [file] : 파일의 내용을 명령어의 입력으로 사용
+- [command] > [file] : 명령어의 결과로 나오는 stdout을 파일에 덮어쓴다.
+- [command] >> [file] : 명령어의 결과를 파일에 추가한다.
+</br>
+
+- [command] 1 > [file] : 표준 출력을 파일에 덮어쓴다
+- [command] 2 > [file] : 명령어 실행 과정에서 에러가 발생하면, 에러 내용을 파일에 덮어쓴다
+- [command] 1 > [file1] 2 > [file2]: 명령어 실행 시, 결과는 file1에 에러는 file2에 덮어쓴다.
+- [command] 1 > [file] 2 > [file]: 명령어 실행시 결과와 에러 모두 파일에 덮어쓴다.
+</br>
+
+- [command] 1 > [file] 2 > /dev/null : 명령어 실행시 결과는 파일에 쓰고, 에러는 출력하지 않고 버린다.
+- [command] > [file] 2>&1 : stdout은 file에 쓰고, stderr를 &1로 보낸다. &1이란 표준출력(1)으로 보내는데 백그라운드(&)로 보내라는 의미. 백그라운드는 화면에 보이지 말고, 안보이게 처리하라는 의미. 결국 stdout과 stderr 모두 file에 쓰여지게 된다.
+- [command] &> [file] : https://www.gnu.org/software/bash/manual/bash.html#Redirections 결국 command 결과를 background로 전부 file로 보내라는 의미이므로 stdout / stderr 전부 file에 쓰게되는 것 같다.
