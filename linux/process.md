@@ -106,3 +106,5 @@ wait류 함수 - 부모가 자식이 종료될 때 까지 기다리게 하고, �
 
 https://leeyh0216.github.io/posts/sid_pid_ppid_pgid/
 이후에 정리
+
+syslogd - daemon 프로세스들의 로깅을 도와주는 데몬 프로세스. UDP 포트 514번 / named pipe / kernel을 통해 등의 방법으로 syslogd로 데이터를 보내면 syslogd 데몬이 로깅을 도와주는 구조인듯. 후에 
