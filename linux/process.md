@@ -104,6 +104,19 @@ wait류 함수 - 부모가 자식이 종료될 때 까지 기다리게 하고, �
 3. setsid로 새로운 세션 생성 -> 세션 리더가 된다
 4. chdir를 이용해 프로세스가 루트 디렉토리에서 작업을 수행하도록 함 (데몬 프로세스가 작업할때 상대경로를 사용함으로써 생기는 혼동을 피하기 위해)
 
+### 데몬의 stdout, stderr, stdin을 끊어버리는 법
+```C
+close(1)
+close(2)
+close(3)
+fd0 = open("/dev/null", O_RDWR);
+fd0 = open("/dev/null", O_RDWR);
+fd0 = open("/dev/null", O_RDWR);
+```
+close(0), close(1), close(2)로 stdout, stderr, stdin을 전부 닫는다.</br>
+그 다음 /dev/null을 open해주면 open함수는 비어있는 file descriptor중 가장 작은 번호부터 리턴해주기에 0, 1, 2번이 /dev/null과 연결됨을 알 수 있다.
+
+
 https://leeyh0216.github.io/posts/sid_pid_ppid_pgid/
 이후에 정리
 
