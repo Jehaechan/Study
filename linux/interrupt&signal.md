@@ -21,7 +21,47 @@ https://getchan.github.io/cs/OS_1/
     4. A의 작업 지점부터 다시 수행
 - 일반적으로 프로그램 내에서 함수 호출에 필요한 복귀 주소는 각 프로그램의 stack 영역에 보관(현재 PC를 스택에 푸쉬 해놓고 복귀할 때 pop해서 확인)
 - 반면, 인터럽트 때문에 CPU를 선점 당해(kernel mode) 돌아올 곳을 저장하는 복귀 주소는 OS kernel 영역에 존재 -> PCB에 저장하게 된다.
-- 
+
+### Computer System
+CPU가 수행해야 할 메모리 주소를 담고 있는 레지스터 -> PC </br>
+- **Hardware**
+    - CPU
+        - 일반 명령: 모든 프로그램이 수행 가능 (mode bit == 1)
+        - 특권 명령: 보안이 필요한 명령 (mode bit == 0)
+    - memory
+        - kernel mode: PC가 kernel code가 존재하는 메모리를 가리키고 있다
+        - user mode: PC가 사용자 프로그램이 존재하는 메모리를 가리키고 있다
+    - I/O Device
+        - I/O Controller(CPU)
+        - Local Buffer
+사용자 프로그램이 특권 명령의 수행을 필요로 하면, OS에게 특권 명령의 대행을 요청 -> System Call!
+ex) 디스크에서 자료를 읽어오는 System Call을 하게 되면
+    1. System Call
+    2. CPU가 컨트롤 레지스터를 세팅해 디스크 컨트롤러에게 데이터를 읽어오라는 명령을 내림
+    3. 디스크 컨트롤러는 디스크로부터 데이터를 읽어와 자신의 로컬 버퍼에 저장
+    4. 디스크 컨트롤러가 CPU에게 HW Interrupt 발생</br>
+    **주변 장치 Interrupt line을 설정 -> CPU는 매번 명령을 시행한 직후 interrupt line을 체크 -> Interrupt가 발생하면 CPU는 해당 인터럽트 루틴으로 넘어가 이를 처리**
+
+### OS memory space
+- **Code 영역**
+    - CPU, Memory 등 자원관리를 위한 부분
+    - 사용자에게 편리한 인터페이스를 제공하기 위한 부분
+    - System Call, Interrupt 처리하는 부분
+- **Data 영역 - 각종 자원을 관리하기 위한 자료구조 저장**
+    - CPU, Memory와 같은 하드웨어 자원 관리
+    - 현재 수행중인 프로세스 관리 -> PCB
+        - 각 프로세스의 상태, CPU 사용 정보, 메모리 사용 정보 등을 유지
+- **Stack 영역 - 함수 호출 시의 복귀 주소를 저장하기 위한 용도로 사용**
+    - 유저 프로그램의 스택과 달리 현재 수행중인 프로세스마다 별도의 스택을 두어 관리
+    - 프로세스가 System Call 후 System Call 내부에서 다른 함수를 호출하는 경우 복귀 주소는 커널 내의 주소가 되어 유저 프로그램의 스택과는 별도의 저장 공간이 필요
+    - 커널은 일종의 공유 코드이므로 일관성 유지를 위해 각 프로세스마다 커널 내 별도의 스택이 필요
+![image](https://user-images.githubusercontent.com/71350045/231543605-0355df1f-d849-423e-b3ea-f3d11f145b52.png)
+
+
+https://sptinspot.tistory.com/24
+#### Mode bit
+Mode bit를 통해 하드웨어적으로 두 가지 모드의 operation을 지원. User mode -> 제한된 instruction. Kernel mode -> OS 코드를 수행. </br>
+Interrupt나 Exception 발생 시 하드웨어가 mode bit을 0으로 바꾸고, 사용자 프로그램으로 CPU를 넘기기 전에 mode bit을 다시 1로 setting한다.
 
 ### Signal이란?
 유저 레벨(OS 레벨 X)에서의 인터럽트. 시그널은 asynchronous(언제 들어올지 모르는) urgent event를 다룬다.</br>
