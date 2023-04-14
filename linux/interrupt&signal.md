@@ -42,7 +42,7 @@ ex) 디스크에서 자료를 읽어오는 System Call을 하게 되면
     4. 디스크 컨트롤러가 CPU에게 HW Interrupt 발생</br>
     **주변 장치 Interrupt line을 설정 -> CPU는 매번 명령을 시행한 직후 interrupt line을 체크 -> Interrupt가 발생하면 CPU는 해당 인터럽트 루틴으로 넘어가 이를 처리**
 
-### OS memory space
+### Kernel memory space
 - **Code 영역**
     - CPU, Memory 등 자원관리를 위한 부분
     - 사용자에게 편리한 인터페이스를 제공하기 위한 부분
@@ -55,6 +55,8 @@ ex) 디스크에서 자료를 읽어오는 System Call을 하게 되면
     - 유저 프로그램의 스택과 달리 현재 수행중인 프로세스마다 별도의 스택을 두어 관리
     - 프로세스가 System Call 후 System Call 내부에서 다른 함수를 호출하는 경우 복귀 주소는 커널 내의 주소가 되어 유저 프로그램의 스택과는 별도의 저장 공간이 필요
     - 커널은 일종의 공유 코드이므로 일관성 유지를 위해 각 프로세스마다 커널 내 별도의 스택이 필요
+- **Heap 영역**
+    - vmalloc(), kmalloc() 사용
 ![image](https://user-images.githubusercontent.com/71350045/231543605-0355df1f-d849-423e-b3ea-f3d11f145b52.png)
 
 
